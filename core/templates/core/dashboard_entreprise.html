@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - {{ societe.nom }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- En-tête -->
+    <div class="col-12">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-primary bg-opacity-10 p-3 rounded-3">
+                    <i class="fas fa-store fa-2x text-primary"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-0">Dashboard</h2>
+                    <p class="text-muted small mb-0">{{ societe.nom }}</p>
+                </div>
+            </div>
+            <a href="{% url 'core:ajouter_produit' %}" class="btn btn-success-gradient rounded-pill px-4">
+                <i class="fas fa-plus-circle me-2"></i> Ajouter un produit
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="col-12">
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <div class="card-modern p-3 text-center">
+                    <h3 class="fw-bold text-primary mb-0">{{ nb_produits }}</h3>
+                    <p class="text-muted small mb-0">Produits</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card-modern p-3 text-center">
+                    <h3 class="fw-bold text-success mb-0">{{ total_ventes|floatformat:0 }} FCFA</h3>
+                    <p class="text-muted small mb-0">Total ventes</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card-modern p-3 text-center">
+                    <h3 class="fw-bold text-warning mb-0">{{ total_commissions|floatformat:0 }} FCFA</h3>
+                    <p class="text-muted small mb-0">Commissions</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card-modern p-3 text-center">
+                    <h3 class="fw-bold text-info mb-0">{{ total_reversement|floatformat:0 }} FCFA</h3>
+                    <p class="text-muted small mb-0">À reverser</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières ventes -->
+    <div class="col-lg-8 col-12">
+        <div class="card-modern p-4">
+            <h5 class="fw-bold mb-3">
+                <i class="fas fa-history text-primary me-2"></i>Dernières ventes
+            </h5>
+            
+            {% if dernieres_ventes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Quantité</th>
+                                <th>Total</th>
+                                <th>Commission</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ligne in dernieres_ventes %}
+                                <tr>
+                                    <td>{{ ligne.produit.nom }}</td>
+                                    <td>{{ ligne.quantite }}</td>
+                                    <td>{{ ligne.get_total|floatformat:0 }} FCFA</td>
+                                    <td>{{ ligne.commission_montant|floatformat:0 }} FCFA</td>
+                                    <td>{{ ligne.commande.date_commande|date:"d/m/Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small">Aucune vente pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="col-lg-4 col-12">
+        <div class="card-modern p-4">
+            <h5 class="fw-bold mb-3">
+                <i class="fas fa-bolt text-warning me-2"></i>Actions rapides
+            </h5>
+            <div class="d-grid gap-2">
+                <a href="{% url 'core:ajouter_produit' %}" class="btn btn-primary-gradient rounded-pill">
+                    <i class="fas fa-plus-circle me-2"></i> Ajouter un produit
+                </a>
+                <a href="{% url 'core:liste_produits_entreprise' %}" class="btn btn-outline-secondary rounded-pill">
+                    <i class="fas fa-list me-2"></i> Voir mes produits
+                </a>
+                <a href="#" class="btn btn-outline-secondary rounded-pill">
+                    <i class="fas fa-chart-line me-2"></i> Voir mes statistiques
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

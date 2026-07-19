@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inscription - Ma Boutique{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center min-vh-75">
+    <div class="col-lg-6 col-md-8 col-12">
+        <div class="auth-card card-modern p-0 overflow-hidden">
+            <!-- En-tête -->
+            <div class="auth-header text-center py-4">
+                <div class="auth-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3 class="mb-0 fw-bold text-white">Créer un compte</h3>
+                <p class="text-white-50 mb-0">Rejoignez notre communauté</p>
+            </div>
+            
+            <div class="auth-body p-4 p-md-5">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-semibold">
+                            <i class="fas fa-user me-1"></i> Nom d'utilisateur *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0">
+                                <i class="fas fa-user text-muted"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control form-control-lg border-0" 
+                                   id="username" 
+                                   name="username" 
+                                   placeholder="Entrez votre nom d'utilisateur"
+                                   value="{{ username|default:'' }}"
+                                   required
+                                   autofocus>
+                        </div>
+                        <small class="text-muted">Choisissez un nom unique et facile à retenir.</small>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="fas fa-envelope me-1"></i> Adresse email *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0">
+                                <i class="fas fa-envelope text-muted"></i>
+                            </span>
+                            <input type="email" 
+                                   class="form-control form-control-lg border-0" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="exemple@email.com"
+                                   value="{{ email|default:'' }}"
+                                   required>
+                        </div>
+                        <small class="text-muted">Nous vous enverrons des confirmations sur cet email.</small>
+                    </div>
+                    
+                    <!-- Mot de passe -->
+                    <div class="mb-3">
+                        <label for="password1" class="form-label fw-semibold">
+                            <i class="fas fa-lock me-1"></i> Mot de passe *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0">
+                                <i class="fas fa-lock text-muted"></i>
+                            </span>
+                            <input type="password" 
+                                   class="form-control form-control-lg border-0" 
+                                   id="password1" 
+                                   name="password1" 
+                                   placeholder="••••••••"
+                                   required
+                                   minlength="8">
+                            <button class="btn btn-outline-secondary border-0" 
+                                    type="button" 
+                                    onclick="togglePassword('password1', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary small" id="lengthCheck">
+                                <i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i> 8 caractères min
+                            </span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary small" id="letterCheck">
+                                <i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i> Lettres et chiffres
+                            </span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary small" id="commonCheck">
+                                <i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i> Pas de mot banal
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmation mot de passe -->
+                    <div class="mb-4">
+                        <label for="password2" class="form-label fw-semibold">
+                            <i class="fas fa-check-circle me-1"></i> Confirmer le mot de passe *
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0">
+                                <i class="fas fa-check-circle text-muted"></i>
+                            </span>
+                            <input type="password" 
+                                   class="form-control form-control-lg border-0" 
+                                   id="password2" 
+                                   name="password2" 
+                                   placeholder="••••••••"
+                                   required>
+                            <button class="btn btn-outline-secondary border-0" 
+                                    type="button" 
+                                    onclick="togglePassword('password2', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Conditions -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="conditions" required>
+                            <label class="form-check-label small" for="conditions">
+                                J'accepte les <a href="#" class="text-decoration-none auth-link">conditions d'utilisation</a> et la <a href="#" class="text-decoration-none auth-link">politique de confidentialité</a>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton -->
+                    <button type="submit" class="btn btn-primary-gradient w-100 rounded-pill py-3">
+                        <i class="fas fa-user-plus me-2"></i> Créer mon compte
+                    </button>
+                </form>
+                
+                <div class="auth-divider">
+                    <span>ou</span>
+                </div>
+                
+                <p class="text-center mb-0">
+                    Déjà un compte ? 
+                    <a href="{% url 'core:connexion' %}" class="text-decoration-none fw-bold auth-link">
+                        <i class="fas fa-sign-in-alt me-1"></i> Se connecter
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Vérification de la force du mot de passe en temps réel
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password1');
+    const lengthCheck = document.getElementById('lengthCheck');
+    const letterCheck = document.getElementById('letterCheck');
+    const commonCheck = document.getElementById('commonCheck');
+    
+    password.addEventListener('input', function() {
+        const val = this.value;
+        
+        // Longueur
+        if (val.length >= 8) {
+            lengthCheck.className = 'badge bg-success bg-opacity-10 text-success small';
+            lengthCheck.innerHTML = '<i class="fas fa-check-circle me-1"></i> 8 caractères min';
+        } else {
+            lengthCheck.className = 'badge bg-secondary bg-opacity-10 text-secondary small';
+            lengthCheck.innerHTML = '<i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i> 8 caractères min';
+        }
+        
+        // Lettres et chiffres
+        if (/[a-zA-Z]/.test(val) && /[0-9]/.test(val)) {
+            letterCheck.className = 'badge bg-success bg-opacity-10 text-success small';
+            letterCheck.innerHTML = '<i class="fas fa-check-circle me-1"></i> Lettres et chiffres';
+        } else {
+            letterCheck.className = 'badge bg-secondary bg-opacity-10 text-secondary small';
+            letterCheck.innerHTML = '<i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i> Lettres et chiffres';
+        }
+        
+        // Pas de mot banal
+        const common = ['password', '12345678', 'qwertyui', 'azertyui', 'motdepasse'];
+        if (val && !common.includes(val.toLowerCase())) {
+            commonCheck.className = 'badge bg-success bg-opacity-10 text-success small';
+            commonCheck.innerHTML = '<i class="fas fa-check-circle me-1"></i> Mot de passe sécurisé';
+        } else {
+            commonCheck.className = 'badge bg-secondary bg-opacity-10 text-secondary small';
+            commonCheck.innerHTML = '<i class="fas fa-circle me-1" style="font-size: 0.4rem;"></i> Évitez les mots banals';
+        }
+    });
+});
+
+// Auto-masquer les messages
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.querySelectorAll('.alert').forEach(function(alert) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+});
+</script>
+
+<style>
+    .min-vh-75 {
+        min-height: 75vh;
+    }
+
+    .auth-card {
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        overflow: hidden;
+    }
+
+    .auth-card:hover {
+        box-shadow: var(--shadow-hover);
+    }
+
+    .auth-header {
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.04);
+        border-radius: 50%;
+    }
+
+    .auth-header::after {
+        content: '';
+        position: absolute;
+        bottom: -40%;
+        left: -20%;
+        width: 150px;
+        height: 150px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 50%;
+    }
+
+    .auth-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        font-size: 1.8rem;
+        color: white;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.08);
+        position: relative;
+        z-index: 1;
+    }
+
+    .auth-body {
+        background: var(--bg-card);
+    }
+
+    .auth-body .input-group-text {
+        background: var(--bg-input);
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    }
+
+    .auth-body .form-control {
+        background: var(--bg-input);
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+
+    .auth-body .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+    }
+
+    .auth-link {
+        color: var(--primary);
+        transition: var(--transition);
+    }
+
+    .auth-link:hover {
+        color: var(--primary-dark);
+    }
+
+    .auth-divider {
+        position: relative;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .auth-divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border-color);
+    }
+
+    .auth-divider span {
+        position: relative;
+        background: var(--bg-card);
+        padding: 0 16px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .btn-primary-gradient {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border: none;
+        color: var(--white);
+        transition: var(--transition);
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    .btn-primary-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(108, 99, 255, 0.35);
+        color: var(--white);
+    }
+
+    .bg-success.bg-opacity-10 {
+        background-color: rgba(46, 204, 113, 0.12) !important;
+    }
+
+    @media (max-width: 576px) {
+        .auth-body {
+            padding: 20px !important;
+        }
+        .auth-header {
+            padding: 20px 16px !important;
+        }
+        .auth-header h3 {
+            font-size: 1.3rem;
+        }
+        .auth-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+        }
+        .form-control-lg {
+            font-size: 0.9rem;
+            padding: 10px 14px;
+        }
+    }
+</style>
+{% endblock %}

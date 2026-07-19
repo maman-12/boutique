@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>{% block title %}Ma Boutique{% endblock %}</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+                   VARIABLES (Light & Dark)
+                ============================================ */
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5A52D5;
+            --primary-light: #8B83FF;
+            --secondary: #FF6B6B;
+            --accent: #FFD93D;
+            --success: #2ECC71;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Thème Clair (défaut) --- */
+        [data-bs-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --bg-navbar: #1a1a2e;
+            --bg-footer: #1a1a2e;
+            --text-primary: #1a1a2e;
+            --text-secondary: #6c757d;
+            --text-muted: #6c757d;
+            --border-color: #e9ecef;
+            --shadow: 0 8px 32px rgba(0,0,0,0.1);
+            --shadow-hover: 0 12px 48px rgba(108, 99, 255, 0.25);
+            --bg-input: #f8f9fa;
+            --bg-light: #f8f9fa;
+            --bg-hover: rgba(0,0,0,0.04);
+        }
+
+        /* --- Thème Sombre --- */
+        [data-bs-theme="dark"] {
+            --bg-body: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --bg-navbar: #0a0a14;
+            --bg-footer: #0a0a14;
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0b8;
+            --text-muted: #6c6c88;
+            --border-color: #2a2a44;
+            --shadow: 0 8px 32px rgba(0,0,0,0.5);
+            --shadow-hover: 0 12px 48px rgba(108, 99, 255, 0.35);
+            --bg-input: #1a1a2e;
+            --bg-light: #1a1a2e;
+            --bg-hover: rgba(255,255,255,0.06);
+        }
+
+        /* ============================================
+                   STYLES GÉNÉRAUX
+                ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ============================================
+                   TOP NAVBAR
+                ============================================ */
+        .navbar-top {
+            background: var(--bg-navbar);
+            padding: 12px 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease;
+        }
+
+        .navbar-top .brand {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #fff !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-top .brand i {
+            color: var(--accent);
+            font-size: 1.6rem;
+        }
+
+        .navbar-top .brand span {
+            background: linear-gradient(135deg, var(--accent), #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Liens Desktop */
+        .desktop-links .nav-link-desktop {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .desktop-links .nav-link-desktop:hover {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+
+        .desktop-links .nav-link-desktop i {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.5);
+            transition: var(--transition);
+        }
+
+        .desktop-links .nav-link-desktop:hover i {
+            color: var(--accent);
+        }
+
+        .desktop-links .nav-link-desktop .badge {
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 4px;
+        }
+
+        .desktop-links .btn-register {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent) !important;
+            padding: 8px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .desktop-links .btn-register:hover {
+            background: var(--accent);
+            color: #1a1a2e !important;
+            transform: translateY(-2px);
+        }
+
+        .desktop-links .btn-login {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8) !important;
+            padding: 8px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .desktop-links .btn-login:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+            color: #fff !important;
+        }
+
+        .desktop-links .btn-logout {
+            background: rgba(255,107,107,0.15);
+            border: none;
+            color: var(--secondary) !important;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .desktop-links .btn-logout:hover {
+            background: rgba(255,107,107,0.25);
+        }
+
+        /* Bouton mode sombre */
+        .theme-toggle {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.15);
+            transform: rotate(30deg);
+        }
+
+        /* Bouton menu hamburger */
+        .navbar-toggler {
+            border: none;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .navbar-toggler .icon-bar {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: #fff;
+            margin: 5px 0;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .navbar-toggler.active .icon-bar:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .navbar-toggler.active .icon-bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .navbar-toggler.active .icon-bar:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Menu déroulant mobile */
+        .navbar-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-navbar);
+            padding: 80px 24px 30px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            overflow-y: auto;
+            box-shadow: -8px 0 40px rgba(0,0,0,0.4);
+        }
+
+        .navbar-menu.open {
+            right: 0;
+        }
+
+        .navbar-menu .user-info {
+            padding: 20px 0 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 20px;
+        }
+
+        .navbar-menu .user-info .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .navbar-menu .user-info .username {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .navbar-menu .user-info .email {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        .navbar-menu .nav-link-mobile {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .navbar-menu .nav-link-mobile:hover {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+        }
+
+        .navbar-menu .nav-link-mobile i {
+            width: 24px;
+            color: var(--primary-light);
+            font-size: 1.1rem;
+        }
+
+        .navbar-menu .nav-link-mobile .badge {
+            margin-left: auto;
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        /* Overlay */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ============================================
+                   BOTTOM NAV (Mobile)
+                ============================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.08);
+            z-index: 1000;
+            border-top: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            position: relative;
+            min-width: 48px;
+            background: transparent;
+            border: none;
+        }
+
+        .bottom-nav .nav-item i {
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+            transition: var(--transition);
+        }
+
+        .bottom-nav .nav-item.active {
+            color: var(--primary);
+        }
+
+        .bottom-nav .nav-item.active i {
+            transform: scale(1.1);
+        }
+
+        .bottom-nav .nav-item .badge-bottom {
+            position: absolute;
+            top: -2px;
+            right: 2px;
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.55rem;
+            padding: 2px 6px;
+            border-radius: 20px;
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .bottom-nav .nav-item .label {
+            font-size: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* ============================================
+                   MAIN CONTENT
+                ============================================ */
+        .main-content {
+            padding-top: 80px;
+            padding-bottom: 20px;
+            min-height: calc(100vh - 80px);
+            transition: background 0.3s ease;
+        }
+
+        /* ============================================
+                   CARTES / CARDS
+                ============================================ */
+        .card-modern {
+            background: var(--bg-card);
+            border: none;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .card-modern:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        /* ============================================
+                   TOAST NOTIFICATIONS (EN HAUT)
+                ============================================ */
+        @keyframes toastSlideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastProgress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .toast {
+            background: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--radius-sm) !important;
+            animation: toastSlideDown 0.5s ease !important;
+            margin-bottom: 10px;
+        }
+        
+        [data-bs-theme="dark"] .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        @media (max-width: 576px) {
+            .toast-container {
+                top: 70px;
+                width: 95%;
+            }
+        }
+
+        /* ============================================
+                   FOOTER
+                ============================================ */
+        .footer {
+            background: var(--bg-footer);
+            color: rgba(255,255,255,0.6);
+            padding: 40px 0 20px;
+            margin-top: 50px;
+            transition: background 0.3s ease;
+        }
+
+        .footer h5 {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+
+        .footer a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .footer a:hover {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .footer .footer-divider {
+            border-color: rgba(255,255,255,0.08);
+            margin: 20px 0;
+        }
+
+        .footer .footer-bottom {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .footer .footer-bottom a {
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 0;
+        }
+
+        .footer .footer-bottom a:hover {
+            color: var(--accent);
+            transform: none;
+        }
+
+        .footer .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            transition: var(--transition);
+        }
+
+        .footer .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .footer .social-links a i {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .footer .social-links a:hover i {
+            color: #fff;
+        }
+
+        .footer .newsletter-form .form-control {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fff;
+            border-radius: 50px;
+            padding: 10px 18px;
+            font-size: 0.85rem;
+        }
+
+        .footer .newsletter-form .form-control::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .footer .newsletter-form .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .footer .newsletter-form .btn {
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* ============================================
+                   RESPONSIVE
+                ============================================ */
+        @media (min-width: 992px) {
+            .bottom-nav {
+                display: none !important;
+            }
+            body {
+                padding-bottom: 0;
+            }
+            .navbar-toggler {
+                display: none !important;
+            }
+            .navbar-menu {
+                position: static !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                overflow-y: visible !important;
+                display: flex !important;
+                align-items: center;
+                gap: 8px;
+            }
+            .navbar-menu .user-info {
+                display: none !important;
+            }
+            .navbar-menu .nav-link-mobile {
+                display: none !important;
+            }
+            .menu-overlay {
+                display: none !important;
+            }
+            .desktop-links {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .desktop-links {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding-top: 70px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .navbar-top .brand {
+                font-size: 1.1rem;
+            }
+            .navbar-top .brand i {
+                font-size: 1.3rem;
+            }
+            .bottom-nav .nav-item {
+                min-width: 36px;
+                padding: 4px 4px;
+            }
+            .bottom-nav .nav-item i {
+                font-size: 1rem;
+            }
+            .bottom-nav .nav-item .label {
+                font-size: 0.4rem;
+            }
+            .footer {
+                padding: 30px 0 15px;
+            }
+            .footer .text-md-end {
+                text-align: left !important;
+                margin-top: 16px;
+            }
+        }
+
+        /* ============================================
+                   UTILITAIRES
+                ============================================ */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            color: #fff;
+            transition: var(--transition);
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+
+        .btn-primary-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(108, 99, 255, 0.4);
+            color: #fff;
+        }
+
+        .btn-success-gradient {
+            background: linear-gradient(135deg, var(--success), #27ae60);
+            border: none;
+            color: #fff;
+            transition: var(--transition);
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+
+        .btn-success-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.4);
+            color: #fff;
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+    TOP NAVBAR
+    ========================================== -->
+    <nav class="navbar-top">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="brand" href="{% url 'core:accueil' %}">
+                <i class="fas fa-store"></i>
+                <span>Ma Boutique</span>
+            </a>
+
+            <div class="desktop-links d-flex align-items-center gap-1">
+                {% if user.is_authenticated %}
+                    <a class="nav-link-desktop" href="{% url 'core:produits' %}">
+                        <i class="fas fa-box"></i> Produits
+                    </a>
+                    <a class="nav-link-desktop" href="{% url 'core:panier' %}">
+                        <i class="fas fa-shopping-cart"></i> Panier
+                        <span class="badge">{{ user.panier.get_nb_articles|default:0 }}</span>
+                    </a>
+                    <a class="nav-link-desktop" href="{% url 'core:historique' %}">
+                        <i class="fas fa-history"></i> Commandes
+                    </a>
+                    <a class="nav-link-desktop" href="{% url 'core:favoris' %}">
+                        <i class="fas fa-heart"></i> Favoris
+                    </a>
+                    <a class="nav-link-desktop" href="{% url 'core:newsletter_abonnement' %}">
+                        <i class="fas fa-envelope"></i> Newsletter
+                    </a>
+                    <a class="nav-link-desktop" href="{% url 'core:chat' %}">
+                        <i class="fas fa-comment-dots"></i> Support
+                    </a>
+                    
+                    {% if user.societe %}
+                        <a class="nav-link-desktop" href="{% url 'core:dashboard_entreprise' %}">
+                            <i class="fas fa-chart-pie"></i> Dashboard
+                        </a>
+                        <a class="nav-link-desktop" href="{% url 'core:liste_produits_entreprise' %}">
+                            <i class="fas fa-box"></i> Mes produits
+                        </a>
+                    {% endif %}
+                    
+                    {% if user.is_staff %}
+                        <a class="nav-link-desktop" href="{% url 'core:stats_admin' %}">
+                            <i class="fas fa-chart-bar"></i> Stats
+                        </a>
+                    {% endif %}
+                    
+                    <a class="nav-link-desktop btn-logout" href="{% url 'core:deconnexion' %}">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </a>
+                {% else %}
+                    <a class="nav-link-desktop btn-login" href="{% url 'core:connexion' %}">
+                        <i class="fas fa-sign-in-alt"></i> Connexion
+                    </a>
+                    <a class="nav-link-desktop btn-register" href="{% url 'core:inscription' %}">
+                        <i class="fas fa-user-plus"></i> S'inscrire
+                    </a>
+                {% endif %}
+
+                <button class="theme-toggle" id="themeToggle" title="Basculer le mode sombre">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+
+            <button class="navbar-toggler" id="menuToggle" type="button">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+    MENU MOBILE (Sidebar)
+    ========================================== -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="navbar-menu" id="mobileMenu">
+        {% if user.is_authenticated %}
+            <div class="user-info">
+                <div class="avatar">{{ user.username|first|upper }}</div>
+                <div class="username">{{ user.username }}</div>
+                <div class="email">{{ user.email }}</div>
+            </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <a class="nav-link-mobile" href="{% url 'core:accueil' %}">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:produits' %}">
+                <i class="fas fa-box"></i> Produits
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:panier' %}">
+                <i class="fas fa-shopping-cart"></i> Panier
+                <span class="badge">{{ user.panier.get_nb_articles|default:0 }}</span>
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:historique' %}">
+                <i class="fas fa-history"></i> Commandes
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:favoris' %}">
+                <i class="fas fa-heart"></i> Favoris
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:newsletter_abonnement' %}">
+                <i class="fas fa-envelope"></i> Newsletter
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:chat' %}">
+                <i class="fas fa-comment-dots"></i> Support
+            </a>
+            
+            {% if user.societe %}
+                <a class="nav-link-mobile" href="{% url 'core:dashboard_entreprise' %}">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </a>
+                <a class="nav-link-mobile" href="{% url 'core:liste_produits_entreprise' %}">
+                    <i class="fas fa-box"></i> Mes produits
+                </a>
+                <a class="nav-link-mobile" href="{% url 'core:ajouter_produit' %}">
+                    <i class="fas fa-plus-circle"></i> Ajouter un produit
+                </a>
+            {% endif %}
+            
+            {% if user.is_staff %}
+                <a class="nav-link-mobile" href="{% url 'core:stats_admin' %}">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </a>
+            {% endif %}
+            
+            <a class="nav-link-mobile" href="{% url 'core:profil' %}">
+                <i class="fas fa-user"></i> Mon profil
+            </a>
+            <hr style="border-color: rgba(255,255,255,0.06);">
+            <a class="nav-link-mobile" href="{% url 'core:deconnexion' %}" style="color: #ff6b6b !important;">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+        {% else %}
+            <a class="nav-link-mobile" href="{% url 'core:connexion' %}">
+                <i class="fas fa-sign-in-alt"></i> Connexion
+            </a>
+            <a class="nav-link-mobile" href="{% url 'core:inscription' %}">
+                <i class="fas fa-user-plus"></i> S'inscrire
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- ==========================================
+    ⚠️ MESSAGES FLASH (Obligatoire pour Django) ⚠️
+    ========================================== -->
+    <div class="messages-container" style="display: none;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" data-type="{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- ==========================================
+    TOAST NOTIFICATIONS (EN HAUT)
+    ========================================== -->
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3"></div>
+
+    <!-- ==========================================
+    MAIN CONTENT
+    ========================================== -->
+    <div class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- ==========================================
+    BOTTOM NAV (Mobile)
+    ========================================== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="{% url 'core:accueil' %}" class="nav-item {% if request.resolver_match.url_name == 'accueil' %}active{% endif %}">
+            <i class="fas fa-home"></i>
+            <span class="label">Accueil</span>
+        </a>
+        <a href="{% url 'core:produits' %}" class="nav-item {% if request.resolver_match.url_name == 'produits' %}active{% endif %}">
+            <i class="fas fa-box"></i>
+            <span class="label">Produits</span>
+        </a>
+        <a href="{% url 'core:panier' %}" class="nav-item {% if request.resolver_match.url_name == 'panier' %}active{% endif %}">
+            <i class="fas fa-shopping-cart"></i>
+            {% if user.is_authenticated and user.panier.get_nb_articles > 0 %}
+                <span class="badge-bottom">{{ user.panier.get_nb_articles }}</span>
+            {% endif %}
+            <span class="label">Panier</span>
+        </a>
+        <a href="{% url 'core:favoris' %}" class="nav-item {% if request.resolver_match.url_name == 'favoris' %}active{% endif %}">
+            <i class="fas fa-heart"></i>
+            <span class="label">Favoris</span>
+        </a>
+        <a href="{% url 'core:newsletter_abonnement' %}" class="nav-item {% if request.resolver_match.url_name == 'newsletter_abonnement' %}active{% endif %}">
+            <i class="fas fa-envelope"></i>
+            <span class="label">Newsletter</span>
+        </a>
+        <a href="{% url 'core:chat' %}" class="nav-item {% if request.resolver_match.url_name == 'chat' %}active{% endif %}">
+            <i class="fas fa-comment-dots"></i>
+            <span class="label">Support</span>
+        </a>
+        
+        {% if user.is_authenticated and user.societe %}
+            <a href="{% url 'core:dashboard_entreprise' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard_entreprise' %}active{% endif %}">
+                <i class="fas fa-chart-pie"></i>
+                <span class="label">Dashboard</span>
+            </a>
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'core:deconnexion' %}" class="nav-item" style="color: #ff6b6b;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="label">Déconnexion</span>
+            </a>
+        {% else %}
+            <a href="{% url 'core:connexion' %}" class="nav-item {% if request.resolver_match.url_name == 'connexion' %}active{% endif %}">
+                <i class="fas fa-user"></i>
+                <span class="label">Compte</span>
+            </a>
+        {% endif %}
+    </nav>
+
+    <!-- ==========================================
+    FOOTER
+    ========================================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Colonne 1 : Brand -->
+                <div class="col-lg-4 col-md-6 col-12">
+                    <h5><i class="fas fa-store text-primary me-2"></i>Ma Boutique</h5>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; line-height: 1.6;">
+                        Votre boutique en ligne pour l'achat de téléphones, ordinateurs, accessoires et électroménager. Livraison rapide au Cameroun.
+                    </p>
+                    <div class="social-links mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Colonne 2 : Liens rapides -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5>Liens rapides</h5>
+                    <a href="{% url 'core:produits' %}">🛒 Produits</a><br>
+                    <a href="{% url 'core:panier' %}">🛍️ Panier</a><br>
+                    <a href="{% url 'core:historique' %}">📋 Commandes</a><br>
+                    <a href="{% url 'core:favoris' %}">❤️ Favoris</a>
+                </div>
+
+                <!-- Colonne 3 : Service client -->
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h5>Service client</h5>
+                    <a href="{% url 'core:chat' %}">💬 Support</a><br>
+                    <a href="{% url 'core:newsletter_abonnement' %}">📧 Newsletter</a><br>
+                    <a href="#">📖 FAQ</a><br>
+                    <a href="#">📞 Contact</a>
+                </div>
+
+                <!-- Colonne 4 : Newsletter -->
+                <div class="col-lg-4 col-md-6 col-12">
+                    <h5>📬 Newsletter</h5>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">
+                        Recevez nos promotions et nouveautés
+                    </p>
+                    <form method="post" action="{% url 'core:newsletter_abonnement' %}" class="newsletter-form d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="email" name="email" class="form-control" 
+                               placeholder="votre@email.com" required>
+                        <button type="submit" class="btn btn-primary-gradient flex-shrink-0">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-md-start text-center">
+                        &copy; 2026 Ma Boutique - Tous droits réservés
+                    </div>
+                    <div class="col-md-6 text-md-end text-center mt-2 mt-md-0">
+                        <a href="#">Mentions légales</a> &bull;
+                        <a href="#">Politique de confidentialité</a> &bull;
+                        <a href="#">CGV</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+    SCRIPTS
+    ========================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==========================================
+        // MODE SOMBRE
+        // ==========================================
+        (function() {
+            const defaultTheme = 'light';
+            document.documentElement.setAttribute('data-bs-theme', defaultTheme);
+            localStorage.setItem('theme', defaultTheme);
+            updateThemeIcon(defaultTheme);
+            
+            document.getElementById('themeToggle').addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                const icon = document.getElementById('themeIcon');
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        })();
+
+        // ==========================================
+        // GESTION DU MENU MOBILE
+        // ==========================================
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('#mobileMenu .nav-link-mobile').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // ==========================================
+        // SYSTÈME DE TOAST (EN HAUT)
+        // ==========================================
+        function showToast(message, type = 'success', title = '') {
+            const container = document.querySelector('.toast-container');
+            if (!container) return;
+            
+            const colors = {
+                success: '#2ECC71',
+                error: '#FF6B6B',
+                warning: '#FFD93D',
+                info: '#6C63FF'
+            };
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-times-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            container.querySelectorAll('.toast').forEach(t => t.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast align-items-center border-0 show';
+            toast.style.background = 'var(--bg-card)';
+            toast.style.color = 'var(--text-primary)';
+            toast.style.borderRadius = '12px';
+            toast.style.boxShadow = '0 10px 40px rgba(0,0,0,0.3)';
+            toast.style.minWidth = '280px';
+            toast.style.maxWidth = '100%';
+            toast.style.marginBottom = '10px';
+            
+            toast.innerHTML = `
+                <div class="d-flex align-items-center p-3">
+                    <div class="me-3" style="color: ${colors[type]}; font-size: 1.3rem;">
+                        <i class="fas ${icons[type]}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        ${title ? `<div class="fw-bold text-secondary small">${title}</div>` : ''}
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close ms-2" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="progress rounded-0" style="height: 3px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar" style="width: 100%; height: 100%; background: ${colors[type]}; animation: toastProgress 4s linear forwards;"></div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 4500);
+        }
+
+        // ==========================================
+        // GESTION DES MESSAGES FLASH
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const messagesContainer = document.querySelector('.messages-container');
+            if (messagesContainer) {
+                const messages = messagesContainer.querySelectorAll('.alert');
+                messages.forEach(function(alert) {
+                    const message = alert.textContent.trim();
+                    const type = alert.dataset.type || 'info';
+                    
+                    let toastType = 'info';
+                    if (type === 'success') toastType = 'success';
+                    else if (type === 'error' || type === 'danger') toastType = 'error';
+                    else if (type === 'warning') toastType = 'warning';
+                    
+                    showToast(message, toastType);
+                    alert.remove();
+                });
+            }
+        });
+
+        // ==========================================
+        // MISE À JOUR DU COMPTEUR DU PANIER
+        // ==========================================
+        function updateCartCount() {
+            const badges = document.querySelectorAll('.badge');
+            const bottomBadge = document.querySelector('.badge-bottom');
+            
+            fetch('/panier/count/')
+                .then(response => response.json())
+                .then(data => {
+                    const count = data.count || 0;
+                    badges.forEach(badge => {
+                        if (badge.closest('.nav-link-desktop') || badge.closest('.nav-link-mobile')) {
+                            badge.textContent = count;
+                            badge.style.display = count > 0 ? 'inline' : 'none';
+                        }
+                    });
+                    if (bottomBadge) {
+                        bottomBadge.textContent = count;
+                        bottomBadge.style.display = count > 0 ? 'inline' : 'none';
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+
+        setInterval(updateCartCount, 10000);
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

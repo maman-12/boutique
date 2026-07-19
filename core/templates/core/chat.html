@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Support - Ma Boutique{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-12">
+        <div class="card-modern p-0 overflow-hidden">
+            <!-- En-tête -->
+            <div class="p-4" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-white bg-opacity-20 d-inline-block p-3 rounded-3">
+                        <i class="fas fa-comment-dots fa-2x text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-white fw-bold mb-0">Support client</h4>
+                        <p class="text-white-50 mb-0 small">Nous sommes là pour vous aider</p>
+                    </div>
+                    <span class="ms-auto">
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> En ligne
+                        </span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Messages -->
+            <div class="p-4" id="chatMessages" style="height: 400px; overflow-y: auto; background: var(--light-gray);">
+                <div class="text-center text-muted small mb-3">
+                    <i class="fas fa-info-circle me-1"></i> Début de la conversation
+                </div>
+                
+                <!-- Message du support -->
+                <div class="d-flex justify-content-start mb-3">
+                    <div class="bg-white p-3 rounded-3 shadow-sm" style="max-width: 75%; border-radius: 12px 12px 12px 4px;">
+                        <span class="fw-semibold text-primary small">Support</span>
+                        <p class="mb-0 small">Bonjour ! Comment puis-je vous aider aujourd'hui ? 😊</p>
+                        <span class="text-muted small" style="font-size: 0.6rem;">10:30</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Zone de saisie -->
+            <div class="p-3 border-top bg-white">
+                <form id="chatForm" class="d-flex gap-2">
+                    <input type="text" id="chatInput" class="form-control rounded-pill" 
+                           placeholder="Écrivez votre message..." required>
+                    <button type="submit" class="btn btn-primary-gradient rounded-pill px-4">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <div class="text-muted small mt-1">
+                    <i class="fas fa-lock me-1"></i> Messages sécurisés
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatForm = document.getElementById('chatForm');
+    
+    function addMessage(message, isUser = true) {
+        const div = document.createElement('div');
+        div.className = `d-flex ${isUser ? 'justify-content-end' : 'justify-content-start'} mb-3`;
+        div.style.animation = 'slideIn 0.3s ease';
+        
+        div.innerHTML = `
+            <div class="${isUser ? 'bg-primary text-white' : 'bg-white'} p-3 rounded-3 shadow-sm" 
+                 style="max-width: 75%; ${isUser ? 'border-radius: 12px 12px 4px 12px;' : 'border-radius: 12px 12px 12px 4px;'}">
+                <p class="mb-0 small">${message}</p>
+                <span class="${isUser ? 'text-white-50' : 'text-muted'} small" style="font-size: 0.6rem;">
+                    ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}
+                </span>
+            </div>
+        `;
+        
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (message) {
+            addMessage(message, true);
+            chatInput.value = '';
+            
+            // Simuler une réponse automatique
+            setTimeout(() => {
+                const responses = [
+                    "Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.",
+                    "Je comprends votre demande. Laissez-moi vérifier pour vous.",
+                    "Nous avons bien reçu votre message. Notre équipe va vous aider.",
+                    "Je vous remercie de votre patience. Nous traitons votre demande."
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse, false);
+            }, 1000 + Math.random() * 2000);
+        }
+    });
+    
+    // Auto-réponse de bienvenue
+    setTimeout(() => {
+        addMessage("Avez-vous une question sur nos produits ou votre commande ?", false);
+    }, 500);
+});
+
+// Style pour l'animation
+const style = document.createElement('style');
+style.textContent = `
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

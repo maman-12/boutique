@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon panier - Ma Boutique{% endblock %}
+
+{% block content %}
+
+
+<style>
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+
+.step .step-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.step.active .step-icon {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.35);
+    transform: scale(1.05);
+}
+
+.step.inactive .step-icon {
+    background: var(--light-gray);
+    color: var(--gray);
+}
+
+.step .step-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--gray);
+}
+
+.step.active .step-label {
+    color: var(--primary);
+}
+
+/* Lignes de connexion entre les étapes */
+.step::after {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: calc(50% + 30px);
+    width: calc(100% - 60px);
+    height: 2px;
+    background: var(--light-gray);
+    z-index: 0;
+}
+
+.step:last-child::after {
+    display: none;
+}
+
+.step.active::after {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+}
+
+@media (max-width: 576px) {
+    .step .step-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    .step .step-label {
+        font-size: 0.6rem;
+    }
+    .step::after {
+        top: 18px;
+        left: calc(50% + 22px);
+        width: calc(100% - 44px);
+    }
+}
+</style>
+
+
+<div class="row g-4">
+    <div class="col-12">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="bg-primary bg-opacity-10 p-3 rounded-3">
+                <i class="fas fa-shopping-cart fa-2x text-primary"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">Mon panier</h2>
+                <p class="text-muted small mb-0">
+                    {% if nb_articles > 0 %}
+                        {{ nb_articles }} article(s) dans votre panier
+                    {% else %}
+                        Votre panier est vide
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if articles %}
+        <!-- ===== LISTE DES ARTICLES ===== -->
+        <div class="col-lg-8 col-12">
+            <div class="card-modern p-0">
+                <div class="p-4">
+                    {% for article in articles %}
+                        <div class="row align-items-center py-3 {% if not forloop.last %}border-bottom{% endif %} g-2">
+                            <!-- Info produit -->
+                            <div class="col-md-4 col-12">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" 
+                                         style="width: 64px; height: 64px;">
+                                        {% if article.produit.image %}
+                                            <img src="{{ article.produit.image.url }}" alt="{{ article.produit.nom }}" 
+                                                 class="img-fluid" style="max-height: 56px; object-fit: contain;">
+                                        {% else %}
+                                            <i class="fas fa-box fa-2x text-muted"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold">{{ article.produit.nom }}</h6>
+                                        <small class="text-muted">{{ article.produit.categorie.nom }}</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <!-- Prix unitaire -->
+                            <div class="col-md-2 col-4 text-center">
+                                <span class="fw-bold text-dark">{{ article.prix_unitaire|floatformat:0 }} <small>FCFA</small></span>
+                            </div>
+                            
+                            <!-- Quantité -->
+                            <div class="col-md-3 col-4">
+                                <form method="post" action="{% url 'core:modifier_quantite' article.id %}" 
+                                      class="d-flex align-items-center gap-1">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantite" value="{{ article.quantite }}" 
+                                           min="1" max="{{ article.produit.stock }}" 
+                                           class="form-control form-control-sm text-center" 
+                                           style="width: 60px;">
+                                    <button type="submit" class="btn btn-primary-gradient btn-sm rounded-pill px-2">
+                                        <i class="fas fa-rotate"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Dans la carte produit, sous le nom -->
+{% if produit.societe %}
+    <small class="text-muted d-block" style="font-size: 0.7rem;">
+        <i class="fas fa-store me-1"></i> {{ produit.societe.nom }}
+    </small>
+{% endif %}
+                            
+                            <!-- Total + Supprimer -->
+                            <div class="col-md-3 col-4 text-md-end">
+                                <span class="fw-bold text-success me-2">
+                                    {{ article.get_total|floatformat:0 }} FCFA
+                                </span>
+                                <a href="{% url 'core:supprimer_article' article.id %}" 
+                                   class="btn btn-danger btn-sm rounded-pill"
+                                   onclick="return confirm('Supprimer cet article ?')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Actions -->
+                <div class="p-3 bg-light rounded-bottom d-flex flex-wrap justify-content-between gap-2">
+                    <a href="{% url 'core:produits' %}" class="btn btn-outline-secondary rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i> Continuer mes achats
+                    </a>
+                    <a href="{% url 'core:vider_panier' %}" class="btn btn-outline-danger rounded-pill"
+                       onclick="return confirm('Vider tout le panier ?')">
+                        <i class="fas fa-trash-alt me-2"></i> Vider le panier
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ===== RÉSUMÉ ===== -->
+        <div class="col-lg-4 col-12">
+            <div class="card-modern p-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-receipt text-primary me-2"></i>Résumé
+                </h5>
+<!-- Dans panier.html, après le résumé, ajoute ceci -->
+
+<!-- Barre de progression vers la commande -->
+<div class="card-modern p-4 mt-4">
+    <h6 class="fw-semibold mb-3">
+        <i class="fas fa-route text-primary me-2"></i> Progression de votre commande
+    </h6>
+    <div class="row g-2 text-center">
+        <div class="col-4">
+            <div class="step {% if articles %}active{% else %}inactive{% endif %}">
+                <div class="step-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <span class="step-label">Panier</span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="step {% if articles and request.path == '/commande/' %}active{% elif articles %}active{% else %}inactive{% endif %}">
+                <div class="step-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <span class="step-label">Commande</span>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="step {% if request.path == '/confirmation/' %}active{% else %}inactive{% endif %}">
+                <div class="step-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <span class="step-label">Confirmation</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Sous-total</span>
+                    <span class="fw-semibold">{{ total|floatformat:0 }} FCFA</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Livraison</span>
+                    <span class="text-muted">À calculer</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total</span>
+                    <span class="text-success">{{ total|floatformat:0 }} FCFA</span>
+                </div>
+                
+                <a href="{% url 'core:commande' %}" class="btn btn-success-gradient w-100 rounded-pill py-3 mt-3">
+                    <i class="fas fa-check-circle me-2"></i> Passer la commande
+                </a>
+                
+                <div class="text-muted small mt-3 text-center">
+                    <i class="fas fa-lock me-1"></i> Paiement sécurisé
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- ===== PANIER VIDE ===== -->
+        <div class="col-12">
+            <div class="text-center py-5">
+                <div class="bg-light p-5 rounded-4 d-inline-block mb-4">
+                    <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+                </div>
+                <h3>Votre panier est vide</h3>
+                <p class="text-muted">Découvrez nos produits et remplissez votre panier !</p>
+                <a href="{% url 'core:produits' %}" class="btn btn-primary-gradient rounded-pill px-4">
+                    <i class="fas fa-shopping-bag me-2"></i> Voir les produits
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .card-modern {
+        background: var(--white);
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+    }
+    
+    .card-modern:hover {
+        box-shadow: var(--shadow-hover);
+    }
+    
+    .bg-light {
+        background-color: var(--light-gray) !important;
+    }
+</style>
+{% endblock %}

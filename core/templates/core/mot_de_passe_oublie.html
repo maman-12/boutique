@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mot de passe oublié - Ma Boutique{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7 col-12">
+        <div class="card-modern p-0 overflow-hidden">
+            <!-- En-tête -->
+            <div class="text-center py-4" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary));">
+                <div class="bg-white bg-opacity-20 d-inline-block p-3 rounded-3 mb-3">
+                    <i class="fas fa-key fa-2x text-white"></i>
+                </div>
+                <h3 class="mb-0 fw-bold text-white">Mot de passe oublié</h3>
+                <p class="text-white-50 mb-0">Nous vous enverrons un lien de réinitialisation</p>
+            </div>
+            
+            <div class="p-4 p-md-5">
+                <!-- Info -->
+                <div class="alert alert-info bg-opacity-10 border-0 rounded-3 mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <small>Entrez l'adresse email associée à votre compte. Nous vous enverrons un lien pour réinitialiser votre mot de passe.</small>
+                </div>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">
+                            <i class="fas fa-envelope me-1"></i> Adresse email
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0">
+                                <i class="fas fa-envelope text-muted"></i>
+                            </span>
+                            <input type="email" 
+                                   class="form-control form-control-lg border-0 bg-light" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="exemple@email.com"
+                                   required
+                                   autofocus>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary-gradient w-100 rounded-pill py-3">
+                        <i class="fas fa-paper-plane me-2"></i> Envoyer le lien
+                    </button>
+                </form>
+                
+                <div class="position-relative my-4">
+                    <hr>
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">ou</span>
+                </div>
+                
+                <p class="text-center mb-0">
+                    <a href="{% url 'core:connexion' %}" class="text-decoration-none fw-semibold" style="color: var(--primary);">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la connexion
+                    </a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Sécurité -->
+        <div class="text-center mt-4">
+            <p class="text-muted small">
+                <i class="fas fa-shield-alt me-1"></i> Vos données sont sécurisées
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-masquer les messages
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.querySelectorAll('.alert').forEach(function(alert) {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 6000);
+});
+</script>
+
+<style>
+    .card-modern {
+        background: var(--white);
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+    }
+    
+    .card-modern:hover {
+        box-shadow: var(--shadow-hover);
+    }
+    
+    .bg-opacity-20 {
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .form-control-lg {
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+    
+    .form-control-lg:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+    }
+    
+    .input-group-text {
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    }
+    
+    .form-control-lg {
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    
+    .btn-primary-gradient {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border: none;
+        color: var(--white);
+        transition: var(--transition);
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+    
+    .btn-primary-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(108, 99, 255, 0.4);
+        color: var(--white);
+    }
+    
+    .alert-info.bg-opacity-10 {
+        background-color: rgba(13, 202, 240, 0.08) !important;
+        border: 1px solid rgba(13, 202, 240, 0.15) !important;
+    }
+</style>
+{% endblock %}

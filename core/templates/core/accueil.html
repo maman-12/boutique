@@ -1,0 +1,609 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ma Boutique - Votre boutique en ligne{% endblock %}
+
+{% block meta_description %}
+    Bienvenue sur Ma Boutique - Achetez des téléphones, ordinateurs, accessoires et électroménager au meilleur prix. Livraison rapide au Cameroun.
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+
+    <!-- ===== SECTION HERO ===== -->
+    <div class="hero-section">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6 col-md-12">
+                <div class="hero-content">
+                    <span class="hero-badge">
+                        <i class="fas fa-star me-1"></i> Nouveau
+                    </span>
+                    <h1 class="hero-title">
+                        Bienvenue sur <span class="gradient-text">Ma Boutique</span>
+                    </h1>
+                    <p class="hero-description">
+                        Découvrez notre sélection de produits électroniques de qualité. 
+                        Téléphones, ordinateurs, accessoires et électroménager au meilleur prix.
+                    </p>
+                    
+                    <div class="hero-actions">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'core:produits' %}" class="btn btn-primary-gradient btn-lg px-5 py-3">
+                                <i class="fas fa-shopping-bag me-2"></i> Voir les produits
+                            </a>
+                            <a href="{% url 'core:profil' %}" class="btn btn-outline-secondary btn-lg rounded-pill px-5 py-3">
+                                <i class="fas fa-user me-2"></i> Mon profil
+                            </a>
+                        {% else %}
+                            <a href="{% url 'core:connexion' %}" class="btn btn-primary-gradient btn-lg px-5 py-3">
+                                <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+                            </a>
+                            <a href="{% url 'core:inscription' %}" class="btn btn-outline-primary btn-lg rounded-pill px-5 py-3">
+                                <i class="fas fa-user-plus me-2"></i> Créer un compte
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">{{ total_produits }}</span>
+                            <span class="stat-label">Produits</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ produits_recents|length }}</span>
+                            <span class="stat-label">Nouveautés</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Disponible</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="hero-image">
+                    <div class="hero-image-main">
+                        <i class="fas fa-store-alt"></i>
+                    </div>
+                    <!-- Cercles décoratifs -->
+                    <div class="circle circle-1"></div>
+                    <div class="circle circle-2"></div>
+                    <div class="circle circle-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BANDEAU DE PROMOTION ===== -->
+    <div class="promo-banner">
+        <div class="row align-items-center g-3">
+            <div class="col-md-8">
+                <h5 class="mb-0">
+                    <i class="fas fa-gift me-2"></i>
+                    Livraison gratuite sur toute commande supérieure à <strong>50 000 FCFA</strong>
+                </h5>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <span class="badge bg-warning text-dark rounded-pill px-4 py-2">
+                    <i class="fas fa-truck me-1"></i> Offre limitée
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DERNIERS PRODUITS ===== -->
+    <div class="section-header">
+        <div>
+            <h2 class="fw-bold mb-0">
+                <i class="fas fa-star text-warning me-2"></i>
+                Derniers produits
+            </h2>
+            <p class="text-muted small mb-0">Les nouveautés de notre catalogue</p>
+        </div>
+        <a href="{% url 'core:produits' %}" class="btn btn-outline-primary rounded-pill px-4">
+            Voir tout <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    {% if produits_recents %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+            {% for produit in produits_recents %}
+                <div class="col">
+                    <div class="product-card-mini">
+                        <a href="{% url 'core:detail_produit' produit.id %}" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                                <div class="position-relative bg-light" style="height: 150px;">
+                                    {% if produit.image %}
+                                        <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" 
+                                             class="w-100 h-100" style="object-fit: contain; padding: 10px;">
+                                    {% else %}
+                                        <div class="d-flex align-items-center justify-content-center h-100">
+                                            <i class="fas fa-image fa-3x text-muted opacity-50"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Badge Nouveau -->
+                                    {% if produit.date_ajout|date:"Y-m-d" == today|date:"Y-m-d" %}
+                                        <span class="badge bg-success position-absolute top-0 start-0 m-2 rounded-pill px-3 py-1" style="font-size: 0.6rem;">
+                                            <i class="fas fa-star me-1"></i> Nouveau
+                                        </span>
+                                    {% endif %}
+                                    
+                                    <!-- Badge Promo -->
+                                    {% if produit.est_en_promo %}
+                                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 rounded-pill px-3 py-1" style="font-size: 0.6rem;">
+                                            -{{ produit.get_pourcentage_promo }}%
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="card-body p-3">
+                                    <h6 class="card-title fw-semibold mb-1 text-dark" style="font-size: 0.85rem;">
+                                        {{ produit.nom|truncatechars:20 }}
+                                    </h6>
+                                    
+                                    <!-- Société -->
+                                    {% if produit.societe %}
+                                        <small class="text-muted d-block" style="font-size: 0.6rem;">
+                                            <i class="fas fa-store me-1"></i> {{ produit.societe.nom }}
+                                        </small>
+                                    {% endif %}
+                                    
+                                    <!-- Prix -->
+                                    <div class="mt-1">
+                                        {% if produit.est_en_promo %}
+                                            <span class="text-danger text-decoration-line-through small">{{ produit.prix|floatformat:0 }}</span>
+                                            <span class="fw-bold text-success">{{ produit.get_prix_avec_promo|floatformat:0 }} FCFA</span>
+                                        {% else %}
+                                            <span class="fw-bold text-success">{{ produit.prix|floatformat:0 }} FCFA</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Stock -->
+                                    <div class="mt-1">
+                                        <span class="badge bg-{% if produit.stock > 0 %}success{% else %}danger{% endif %} bg-opacity-10 text-{% if produit.stock > 0 %}success{% else %}danger{% endif %} px-2 py-1" style="font-size: 0.6rem;">
+                                            <i class="fas fa-{% if produit.stock > 0 %}check-circle{% else %}times-circle{% endif %} me-1"></i>
+                                            {% if produit.stock > 0 %}En stock{% else %}Épuisé{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">Aucun produit disponible pour le moment.</p>
+        </div>
+    {% endif %}
+
+    <!-- ===== CATÉGORIES POPULAIRES ===== -->
+    <div class="section-header mt-5">
+        <div>
+            <h2 class="fw-bold mb-0">
+                <i class="fas fa-th-large text-primary me-2"></i>
+                Catégories
+            </h2>
+            <p class="text-muted small mb-0">Explorez notre catalogue</p>
+        </div>
+    </div>
+
+    <div class="categories-grid">
+        <a href="{% url 'core:produits' %}" class="category-item active">
+            <i class="fas fa-th-large"></i>
+            <span>Tous</span>
+        </a>
+        {% for cat in categories %}
+            <a href="{% url 'core:produits' %}?categorie={{ cat.id }}" class="category-item">
+                <i class="fas fa-folder"></i>
+                <span>{{ cat.nom }}</span>
+                <span class="category-count">{{ cat.produits.count }}</span>
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- ===== SERVICES ===== -->
+    <div class="services-section mt-5">
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h6>Livraison rapide</h6>
+                    <p class="small text-muted mb-0">Partout au Cameroun</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h6>Paiement sécurisé</h6>
+                    <p class="small text-muted mb-0">100% sécurisé</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h6>Support client</h6>
+                    <p class="small text-muted mb-0">Réponse rapide</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h6>Retour facile</h6>
+                    <p class="small text-muted mb-0">Sous 7 jours</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== STYLES ===== -->
+<style>
+    .home-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 0 20px 0;
+    }
+
+    /* ===== HERO ===== */
+    .hero-section {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 3rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        padding: 4px 14px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .hero-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.1;
+        margin-bottom: 16px;
+    }
+
+    .hero-title .gradient-text {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-description {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 480px;
+        margin-bottom: 24px;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .hero-stats {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-number {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text-primary);
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-divider {
+        width: 1px;
+        height: 40px;
+        background: var(--border-color);
+    }
+
+    /* ===== HERO IMAGE ===== */
+    .hero-image {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-image-main {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8rem;
+        color: white;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 20px 60px rgba(37, 99, 235, 0.3);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.1);
+        z-index: 1;
+    }
+
+    .circle-1 {
+        width: 400px;
+        height: 400px;
+        top: -50px;
+        right: -50px;
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    .circle-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -30px;
+        left: -30px;
+        background: rgba(124, 58, 237, 0.1);
+        animation: pulse 3s ease-in-out infinite 1s;
+    }
+
+    .circle-3 {
+        width: 100px;
+        height: 100px;
+        top: 50%;
+        right: -20px;
+        background: rgba(245, 158, 11, 0.15);
+        animation: pulse 5s ease-in-out infinite 2s;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.5; }
+    }
+
+    /* ===== PROMO BANNER ===== */
+    .promo-banner {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        color: white;
+        padding: 16px 24px;
+        border-radius: var(--radius);
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    /* ===== PRODUIT CARD MINI ===== */
+    .product-card-mini .card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(0,0,0,0.04) !important;
+    }
+
+    .product-card-mini .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08) !important;
+    }
+
+    /* ===== CATEGORIES ===== */
+    .categories-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 4px 0;
+    }
+
+    .category-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 50px;
+        background: white;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        border: 1px solid transparent;
+    }
+
+    .category-item:hover {
+        background: var(--bg-hover);
+        color: var(--primary);
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .category-item.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .category-item .category-count {
+        font-size: 0.6rem;
+        background: rgba(0,0,0,0.08);
+        padding: 1px 8px;
+        border-radius: 20px;
+        margin-left: 2px;
+    }
+
+    .category-item.active .category-count {
+        background: rgba(255,255,255,0.2);
+        color: white;
+    }
+
+    /* ===== SERVICES ===== */
+    .services-section {
+        padding: 24px 0;
+    }
+
+    .service-item {
+        background: white;
+        padding: 20px 16px;
+        border-radius: var(--radius);
+        text-align: center;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .service-item:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .service-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--bg-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        font-size: 1.3rem;
+        color: var(--primary);
+        transition: all 0.3s ease;
+    }
+
+    .service-item:hover .service-icon {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        .hero-section {
+            padding: 2rem 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 1.8rem;
+        }
+        .hero-description {
+            font-size: 0.95rem;
+        }
+        .hero-stats {
+            gap: 16px;
+        }
+        .stat-number {
+            font-size: 1.2rem;
+        }
+        .hero-actions .btn {
+            font-size: 0.9rem;
+            padding: 10px 20px !important;
+        }
+        .promo-banner {
+            padding: 12px 16px;
+            font-size: 0.85rem;
+        }
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .category-item {
+            font-size: 0.75rem;
+            padding: 6px 14px;
+        }
+        .services-section .col-6 {
+            margin-bottom: 12px;
+        }
+        .service-item {
+            padding: 14px 10px;
+        }
+        .service-item h6 {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-section {
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius-sm);
+        }
+        .hero-title {
+            font-size: 1.5rem;
+        }
+        .hero-stats {
+            gap: 12px;
+        }
+        .stat-number {
+            font-size: 1rem;
+        }
+        .stat-label {
+            font-size: 0.6rem;
+        }
+        .stat-divider {
+            height: 30px;
+        }
+        .category-item {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+        }
+        .category-item i {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mes produits - {{ societe.nom }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">
+            <i class="fas fa-box text-primary me-2"></i>Mes produits
+        </h2>
+        <p class="text-muted small mb-0">{{ produits|length }} produit(s)</p>
+    </div>
+    <a href="{% url 'core:ajouter_produit' %}" class="btn btn-success-gradient rounded-pill px-4">
+        <i class="fas fa-plus-circle me-2"></i> Ajouter
+    </a>
+</div>
+
+{% if produits %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
+        {% for produit in produits %}
+            <div class="col">
+                <div class="card-modern h-100 overflow-hidden">
+                    <!-- Image -->
+                    <div class="bg-light text-center p-3" style="height: 150px;">
+                        {% if produit.image %}
+                            <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" 
+                                 class="img-fluid h-100" style="object-fit: contain;">
+                        {% else %}
+                            <i class="fas fa-image fa-4x text-muted"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-3">
+                        <h6 class="fw-semibold">{{ produit.nom }}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-success">{{ produit.prix|floatformat:0 }} FCFA</span>
+                            <span class="badge bg-{% if produit.stock > 0 %}success{% else %}danger{% endif %}">
+                                {{ produit.stock }} en stock
+                            </span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge bg-info">{{ produit.categorie.nom }}</span>
+                            <span class="badge bg-secondary">Commission {{ produit.commission_taux }}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border-top d-flex gap-2">
+                        <a href="{% url 'core:modifier_produit' produit.id %}" 
+                           class="btn btn-primary-gradient btn-sm flex-grow-1 rounded-pill">
+                            <i class="fas fa-edit me-1"></i> Modifier
+                        </a>
+                        <a href="{% url 'core:supprimer_produit' produit.id %}" 
+                           class="btn btn-danger btn-sm rounded-pill">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+        <h3>Aucun produit</h3>
+        <p class="text-muted">Ajoutez votre premier produit</p>
+        <a href="{% url 'core:ajouter_produit' %}" class="btn btn-primary-gradient rounded-pill">
+            <i class="fas fa-plus-circle me-2"></i> Ajouter un produit
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

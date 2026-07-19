@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ajouter un produit{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-12">
+        <div class="card-modern p-4">
+            <h4 class="fw-bold mb-3">
+                <i class="fas fa-plus-circle text-success me-2"></i>Ajouter un produit
+            </h4>
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nom du produit *</label>
+                        {{ form.nom }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Catégorie *</label>
+                        {{ form.categorie }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Prix (FCFA) *</label>
+                        {{ form.prix }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Stock *</label>
+                        {{ form.stock }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Image</label>
+                        {{ form.image }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Description *</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+                
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-success-gradient rounded-pill px-4">
+                        <i class="fas fa-save me-2"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'core:liste_produits_entreprise' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                        Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

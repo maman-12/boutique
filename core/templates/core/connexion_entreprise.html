@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Connexion Entreprise - Ma Boutique{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7 col-12">
+        <div class="card-modern p-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-store fa-3x text-primary"></i>
+                <h4 class="fw-bold mt-2">Espace Entreprise</h4>
+                <p class="text-muted small">Connectez-vous à votre espace vendeur</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-semibold">
+                        <i class="fas fa-user me-1"></i> Nom d'utilisateur
+                    </label>
+                    <input type="text" name="username" id="username" 
+                           class="form-control form-control-lg" 
+                           placeholder="Entrez votre nom d'utilisateur" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold">
+                        <i class="fas fa-lock me-1"></i> Mot de passe
+                    </label>
+                    <input type="password" name="password" id="password" 
+                           class="form-control form-control-lg" 
+                           placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary-gradient w-100 rounded-pill py-3">
+                    <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+                </button>
+            </form>
+            
+            <hr class="my-4">
+            
+            <p class="text-center mb-0">
+                Vous êtes une entreprise et vous voulez vendre sur notre plateforme ?
+                <br>
+                <a href="{% url 'core:inscription_entreprise' %}" class="text-decoration-none fw-semibold" style="color: var(--primary);">
+                    <i class="fas fa-plus-circle me-1"></i> Contactez l'administrateur
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

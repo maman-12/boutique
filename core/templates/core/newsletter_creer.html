@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Créer une newsletter{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-12">
+        <div class="card-modern p-4">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="bg-primary bg-opacity-10 p-3 rounded-3">
+                    <i class="fas fa-pen fa-2x text-primary"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold mb-0">Créer une newsletter</h4>
+                    <p class="text-muted small mb-0">Rédigez votre email pour les abonnés</p>
+                </div>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Sujet *</label>
+                    <input type="text" name="sujet" class="form-control" placeholder="Promotions du mois" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Contenu *</label>
+                    <textarea name="contenu" class="form-control" rows="10" 
+                              placeholder="Écrivez votre message... Utilisez [NOM] pour le nom de l'abonné et [LIEN_DESABONNEMENT] pour le lien de désabonnement" required></textarea>
+                    <small class="text-muted">
+                        Astuce : Utilisez <code>[NOM]</code> pour le nom de l'abonné et <code>[LIEN_DESABONNEMENT]</code> pour le lien de désabonnement.
+                    </small>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Cette newsletter sera envoyée à <strong>{{ abonnes_count }}</strong> abonnés actifs.
+                </div>
+                
+                <button type="submit" class="btn btn-success-gradient w-100 rounded-pill py-3">
+                    <i class="fas fa-save me-2"></i> Créer et envoyer plus tard
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

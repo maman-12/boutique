@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Demande de devis - Ma Boutique{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+        <div class="card-modern p-4">
+            <div class="text-center mb-4">
+                <div class="bg-primary bg-opacity-10 d-inline-block p-3 rounded-3 mb-3">
+                    <i class="fas fa-file-invoice fa-3x text-primary"></i>
+                </div>
+                <h4 class="fw-bold">Demande de devis</h4>
+                <p class="text-muted small">
+                    {% if produit %}
+                        Pour le produit : <strong>{{ produit.nom }}</strong> ({{ produit.prix|floatformat:0 }} FCFA)
+                    {% else %}
+                        Remplissez le formulaire pour recevoir un devis personnalisé
+                    {% endif %}
+                </p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nom complet *</label>
+                        <input type="text" name="nom" class="form-control" 
+                               value="{{ nom|default:'' }}" required placeholder="Votre nom">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email *</label>
+                        <input type="email" name="email" class="form-control" 
+                               value="{{ email|default:'' }}" required placeholder="votre@email.com">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Téléphone *</label>
+                        <input type="tel" name="telephone" class="form-control" 
+                               value="{{ telephone|default:'' }}" required placeholder="6X XX XX XX">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Produit (optionnel)</label>
+                        <!-- 🔥 ICI ON UTILISE LA LISTE produits (au pluriel) -->
+                        <select name="produit_id" class="form-select">
+                            <option value="">Sélectionnez un produit</option>
+                            {% for p in produits %}
+                                <option value="{{ p.id }}" {% if produit and produit.id == p.id %}selected{% endif %}>
+                                    {{ p.nom }} - {{ p.prix|floatformat:0 }} FCFA
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea name="message" class="form-control" rows="4" 
+                                  placeholder="Décrivez votre besoin, la quantité souhaitée, etc.">{{ message|default:'' }}</textarea>
+                    </div>
+                </div>
+                
+                {% if produit %}
+                    <input type="hidden" name="produit_id" value="{{ produit.id }}">
+                {% endif %}
+                
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary-gradient w-100 rounded-pill py-3">
+                        <i class="fas fa-paper-plane me-2"></i> Envoyer ma demande
+                    </button>
+                </div>
+            </form>
+            
+            <hr class="my-4">
+            
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'core:produits' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="fas fa-arrow-left me-2"></i> Retour aux produits
+                </a>
+                <a href="{% url 'core:mes_devis' %}" class="btn btn-outline-primary rounded-pill px-4">
+                    <i class="fas fa-list me-2"></i> Mes devis
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

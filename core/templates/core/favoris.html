@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mes favoris - Ma Boutique{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="bg-danger bg-opacity-10 p-3 rounded-3">
+                <i class="fas fa-heart fa-2x text-danger"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">Mes favoris</h2>
+                <p class="text-muted small mb-0">
+                    {% if favoris %}
+                        {{ favoris|length }} produit(s) en favoris
+                    {% else %}
+                        Aucun favori
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if favoris %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+            {% for favori in favoris %}
+                <div class="col">
+                    <div class="card-modern h-100 overflow-hidden">
+                        <div class="bg-light text-center p-3" style="height: 160px;">
+                            {% if favori.produit.image %}
+                                <img src="{{ favori.produit.image.url }}" alt="{{ favori.produit.nom }}" 
+                                     class="img-fluid h-100" style="object-fit: contain;">
+                            {% else %}
+                                <i class="fas fa-image fa-4x text-muted"></i>
+                            {% endif %}
+                        </div>
+                        <div class="p-3">
+                            <h6 class="fw-semibold">{{ favori.produit.nom }}</h6>
+                            <span class="fw-bold text-success">{{ favori.produit.prix|floatformat:0 }} FCFA</span>
+                            <div class="d-flex gap-2 mt-2">
+                                <a href="{% url 'core:detail_produit' favori.produit.id %}" 
+                                   class="btn btn-primary-gradient btn-sm rounded-pill flex-grow-1">
+                                    <i class="fas fa-eye me-1"></i> Voir
+                                </a>
+                                <a href="{% url 'core:ajouter_favori' favori.produit.id %}" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill">
+                                    <i class="fas fa-heart-broken"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <div class="bg-light p-5 rounded-4 d-inline-block mb-4">
+                    <i class="fas fa-heart fa-4x text-muted"></i>
+                </div>
+                <h3>Aucun favori</h3>
+                <p class="text-muted">Vous n'avez pas encore de produits en favoris</p>
+                <a href="{% url 'core:produits' %}" class="btn btn-primary-gradient rounded-pill px-4">
+                    <i class="fas fa-shopping-bag me-2"></i> Découvrir les produits
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

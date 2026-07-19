@@ -1,0 +1,40 @@
+# Dans ton terminal local
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environnement virtuel
+venv/
+env/
+.venv/
+ENV/
+
+# Django
+db.sqlite3
+*.log
+media/
+staticfiles/
+/static/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Variables d'environnement
+.env
+.env.local

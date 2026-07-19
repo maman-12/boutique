@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Statistiques - Administration{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-4">
+    <div class="bg-primary bg-opacity-10 p-3 rounded-3">
+        <i class="fas fa-chart-bar fa-2x text-primary"></i>
+    </div>
+    <div>
+        <h2 class="fw-bold mb-0">Tableau de bord</h2>
+        <p class="text-muted small mb-0">Statistiques et indicateurs clés</p>
+    </div>
+</div>
+
+<!-- ===== CARTES STATISTIQUES ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-primary mb-0">{{ total_produits }}</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-box me-1"></i> Produits</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-success mb-0">{{ total_commandes }}</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-shopping-cart me-1"></i> Commandes</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-warning mb-0">{{ total_clients }}</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-users me-1"></i> Clients</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-info mb-0">{{ total_ventes|floatformat:0 }} FCFA</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-coins me-1"></i> Total ventes</p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== STATS SUPPLEMENTAIRES ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-danger mb-0">{{ total_entreprises }}</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-store me-1"></i> Entreprises</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-success mb-0">{{ nb_commandes_mois }}</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-calendar-alt me-1"></i> Commandes du mois</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-warning mb-0">{{ total_ventes_mois|floatformat:0 }} FCFA</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-calendar-check me-1"></i> Ventes du mois</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-6">
+        <div class="card-modern p-3 text-center">
+            <h3 class="fw-bold text-danger mb-0">{{ devis_en_attente }}</h3>
+            <p class="text-muted small mb-0"><i class="fas fa-file-invoice me-1"></i> Devis en attente</p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== STATUT DES COMMANDES ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-12">
+        <div class="card-modern p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-chart-pie text-primary me-2"></i>Statut des commandes
+            </h6>
+            <div class="row">
+                {% for statut in commandes_par_statut %}
+                    <div class="col-6 col-md-4 mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge 
+                                {% if statut.statut == 'payee' %}bg-success
+                                {% elif statut.statut == 'expediee' %}bg-info
+                                {% elif statut.statut == 'livree' %}bg-primary
+                                {% elif statut.statut == 'annulee' %}bg-danger
+                                {% else %}bg-warning{% endif %} rounded-pill px-3 py-2">
+                                {{ statut.statut }}
+                            </span>
+                            <span class="fw-bold">{{ statut.count }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted small">Aucune commande</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== MEILLEURS PRODUITS ===== -->
+    <div class="col-md-6 col-12">
+        <div class="card-modern p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-trophy text-warning me-2"></i>Meilleurs produits
+            </h6>
+            {% if meilleurs_produits %}
+                <div class="list-group list-group-flush">
+                    {% for produit in meilleurs_produits %}
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span>{{ produit.produit__nom|default:"Produit supprimé" }}</span>
+                            <span class="badge bg-primary rounded-pill">{{ produit.total_vendu }} vendus</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted small">Aucune vente enregistrée</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ===== DERNIÈRES COMMANDES ===== -->
+<div class="row">
+    <div class="col-12">
+        <div class="card-modern p-4">
+            <h6 class="fw-bold mb-3">
+                <i class="fas fa-history text-primary me-2"></i>Dernières commandes
+            </h6>
+            {% if dernieres_commandes %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Client</th>
+                                <th>Total</th>
+                                <th>Statut</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cmd in dernieres_commandes %}
+                                <tr>
+                                    <td>#{{ cmd.id }}</td>
+                                    <td>{{ cmd.client.username }}</td>
+                                    <td>{{ cmd.total|floatformat:0 }} FCFA</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if cmd.statut == 'payee' %}bg-success
+                                            {% elif cmd.statut == 'expediee' %}bg-info
+                                            {% elif cmd.statut == 'livree' %}bg-primary
+                                            {% elif cmd.statut == 'annulee' %}bg-danger
+                                            {% else %}bg-warning{% endif %}">
+                                            {{ cmd.get_statut_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ cmd.date_commande|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted small">Aucune commande</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ===== LIENS RAPIDES ===== -->
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'core:liste_produits_entreprise' %}" class="btn btn-outline-primary rounded-pill">
+                <i class="fas fa-box me-2"></i> Gérer les produits
+            </a>
+            <a href="/admin/" class="btn btn-outline-secondary rounded-pill">
+                <i class="fas fa-cog me-2"></i> Admin Django
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
